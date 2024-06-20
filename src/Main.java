@@ -51,9 +51,10 @@ public class Main {
                     g.imprimirMatrizAd();
                     break;
                 case 5:
-                    
+                    System.out.println("Fin del programa");
                 break;
                 default:
+                    System.out.println("Opción inválida");
                 break;
             }
         }while(menu!=5);
