@@ -4,7 +4,7 @@ public class Grafo {
     private int numNodos;
     private int maxNodos;
     private int[][] matrizAdy;
-    Nodo[] nodos;
+    private Nodo[] nodos;
 
     public Nodo[] getNodos() {
         return nodos;
@@ -18,13 +18,35 @@ public class Grafo {
         this.maxNodos=numero;
         this.numNodos=0;
         this.matrizAdy=new int[numero][numero];
-        this.nodos= new Nodo[maxNodos];
+        this.nodos= new Nodo[this.maxNodos];
         for(int i=0; i<numero;i++){
-            nodos[i]=null;
+            this.nodos[i]=null;
             for(int j=0; j<numero; j++){
                 matrizAdy[i][j]=0;
             }
         }
+    }
+    public void imprimirArrayDeVertices(){
+        for(int i=0;i<this.nodos.length;i++){
+            if(this.nodos[i]!=null){
+                System.out.print("V"+this.nodos[i].getValor() + ", " );
+            }
+        }
+    }
+    public void imprimirMatrizAd(){
+        for(int i=0;i<this.matrizAdy.length;i++){
+            System.out.println("");
+            for(int j=0;j<this.matrizAdy.length;j++){
+                if(this.nodos[i]!=null && this.nodos[j]!=null){
+                    System.out.print(this.matrizAdy[i][j]+ "  ");
+                }
+                else{
+                    System.out.print("*  ");
+                }
+                
+            }
+        }
+        System.out.println("");
     }
     public int encontrarNodo(int valor){
         int resultado = -1;
@@ -38,24 +60,23 @@ public class Grafo {
         }
         return resultado;
     }
-    public void addNodo(int valor)throws Exception{
-        if((encontrarNodo(valor)!=-1)){
-            throw new Exception("No se puede añadir el nodo. Valor ya ocupado.");
+    public void addNodo(int valor){
+        if((encontrarNodo(valor)!=-1) || this.numNodos==this.maxNodos ){
+            System.out.println("El grafo ya tiene todos los vértices posibles o el valor ingresado es repetido.");
         }
-        if(this.numNodos<this.maxNodos){
-            throw new Exception("No se puede añadir el nodo. Numero maximo de nodos alcanzado.");
-        }
-        Nodo nuevo = new Nodo(valor);
-        this.nodos[numNodos]=nuevo;
+        else{
+            Nodo nuevo = new Nodo(valor);
+            this.nodos[this.numNodos]=nuevo;
+            this.numNodos++;
+        }    
     }
-    public void addArista(int valor1, int valor2) throws Exception{
-        int primero = encontrarNodo(valor1);
-        int segundo = encontrarNodo(valor2);
-        if((primero!=-1)&&(segundo!=-1)){
-            this.matrizAdy[primero][segundo]=1;
-            this.matrizAdy[segundo][primero]=1;
+    public void addArista(int valorSalida, int valorEntrada){
+        int salida = encontrarNodo(valorSalida);
+        int entrada = encontrarNodo(valorEntrada);
+        if((entrada!=-1)&&(salida!=-1)&&(entrada!=salida)){
+            this.matrizAdy[salida][entrada]=1;
         } else {
-            throw new Exception("Uno o ambos nodos no existen.");
+            System.out.println("Uno o ambos vertices ingresados no existen o se intentó ingresar un lazo.");
         }
     }
     public void recorridoAnchura(int valorOrigen) throws Exception{
@@ -68,7 +89,13 @@ public class Grafo {
         cola.add(v);
         while(!cola.isEmpty()){
             w=cola.poll();
-            System.out.println("Nodo n° "+nodos+"");
+            System.out.println("Nodo n° "+this.nodos[w].getValor() +"");
+            for (int i=0;i<this.numNodos;i++){
+                if(this.matrizAdy[w][i]==1 && visitados[i]==false){
+                    cola.add(i);
+                    visitados[i]=true;
+                }
+            }
         }
     }
     

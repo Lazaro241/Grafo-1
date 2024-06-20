@@ -2,7 +2,7 @@ public class Nodo {
     private int valor;
     private int numvertice;
     public int getValor() {
-        return valor;
+        return this.valor;
     }
     public void setValor(int valor) {
         this.valor = valor;
